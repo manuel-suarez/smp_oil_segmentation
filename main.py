@@ -36,7 +36,7 @@ plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to tr
 plt.subplot(1,2,2)
 plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
 plt.savefig("figure1.png")
-logging.info(f"Train image size: {sample['image'].size}")
+logging.info(f"Train image shape: {sample['image'].shape}")
 
 sample = valid_dataset[0]
 plt.subplot(1,2,1)
@@ -44,7 +44,7 @@ plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to tr
 plt.subplot(1,2,2)
 plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
 plt.savefig("figure2.png")
-logging.info(f"Valid image size: {sample['image'].size}")
+logging.info(f"Valid image shape: {sample['image'].shape}")
 
 sample = test_dataset[0]
 plt.subplot(1,2,1)
@@ -52,6 +52,6 @@ plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to tr
 plt.subplot(1,2,2)
 plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
 plt.savefig("figure3.png")
-logging.info(f"Test image size: {sample['image'].size}")
+logging.info(f"Test image shape: {sample['image'].shape}")
 
 logging.info('Done!')
