@@ -8,7 +8,7 @@ import segmentation_models_pytorch as smp
 from pprint import pprint
 from torch.utils.data import DataLoader
 
-from segmentation_models_pytorch import SimpleOxfordPetDataset
+from segmentation_models_pytorch.datasets import SimpleOxfordPetDataset
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(name)s %(levelname)s - %(message)s', level=logging.INFO)
 # download data
