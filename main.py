@@ -35,7 +35,7 @@ plt.subplot(1,2,1)
 plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to transpose back to HWC
 plt.subplot(1,2,2)
 plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
-plt.savefig("figure1.png")
+plt.savefig("figure_01.png")
 logging.info(f"Train image shape: {sample['image'].shape}")
 
 sample = valid_dataset[0]
@@ -43,7 +43,7 @@ plt.subplot(1,2,1)
 plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to transpose back to HWC
 plt.subplot(1,2,2)
 plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
-plt.savefig("figure2.png")
+plt.savefig("figure_02.png")
 logging.info(f"Valid image shape: {sample['image'].shape}")
 
 sample = test_dataset[0]
@@ -51,7 +51,7 @@ plt.subplot(1,2,1)
 plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to transpose back to HWC
 plt.subplot(1,2,2)
 plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
-plt.savefig("figure3.png")
+plt.savefig("figure_03.png")
 logging.info(f"Test image shape: {sample['image'].shape}")
 
 logging.info("Model definition")
@@ -179,5 +179,42 @@ model = PetModel("FPN", "resnet34", in_channels=3, out_classes=1)
 logging.info("Training")
 trainer = pl.Trainer(gpus=1, max_epochs=5)
 trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
+
+# run validation dataset
+logging.info("Validation metrics")
+valid_metrics = trainer.validate(model, dataloaders=valid_dataloader, verbose=False)
+logging.info(valid_metrics)
+
+# run test dataset
+logging.info("Test metrics")
+test_metrics = trainer.test(model, dataloaders=test_dataloader, verbose=False)
+logging.info(test_metrics)
+
+logging.info("Result visualization")
+batch = next(iter(test_dataloader))
+with torch.no_grad():
+    model.eval()
+    logits = model(batch["image"])
+pr_masks = logits.sigmoid()
+
+for idx, (image, gt_mask, pr_mask) in enumerate(zip(batch["image"], batch["mask"], pr_masks)):
+    plt.figure(figsize=(10, 5))
+
+    plt.subplot(1, 3, 1)
+    plt.imshow(image.numpy().transpose(1, 2, 0))  # convert CHW -> HWC
+    plt.title("Image")
+    plt.axis("off")
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(gt_mask.numpy().squeeze()) # just squeeze classes dim, because we have only one class
+    plt.title("Ground truth")
+    plt.axis("off")
+
+    plt.subplot(1, 3, 3)
+    plt.imshow(pr_mask.numpy().squeeze()) # just squeeze classes dim, because we have only one class
+    plt.title("Prediction")
+    plt.axis("off")
+
+    plt.savefig(f"result_{str(idx).zfill(2)}.png")
 
 logging.info('Done!')
