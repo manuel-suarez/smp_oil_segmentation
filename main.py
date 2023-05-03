@@ -54,6 +54,7 @@ plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd 
 plt.savefig("figure3.png")
 logging.info(f"Test image shape: {sample['image'].shape}")
 
+logging.info("Model definition")
 class PetModel(pl.LightningModule):
     def __init__(self, arch, encoder_name, in_channels, out_classes, **kwargs):
         super().__init__()
@@ -172,6 +173,11 @@ class PetModel(pl.LightningModule):
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=0.0001)
 
+logging.info("Model instantiation")
 model = PetModel("FPN", "resnet34", in_channels=3, out_classes=1)
+
+logging.info("Training")
+trainer = pl.Trainer(gpus=1, max_epochs=5)
+trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
 
 logging.info('Done!')
