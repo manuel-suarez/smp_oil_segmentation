@@ -147,13 +147,13 @@ class PetModel(pl.LightningModule):
             f"{stage}_dataset_iou": dataset_iou,
         }
 
+        logging.info(f"Epoch: {self.current_epoch}, Stage: {stage}")
         self.log_dict(metrics, prog_bar=True)
 
     def training_step(self, batch, batch_idx):
         return self.shared_step(batch, "train")
 
     def training_epoch_end(self, outputs):
-        logging.info(f"Epoch: {self.current_epoch}")
         return self.shared_epoch_end(outputs, "train")
 
     def validation_step(self, batch, batch_idx):
