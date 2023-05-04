@@ -101,8 +101,6 @@ class PetModel(pl.LightningModule):
 
         # Predicted mask contains logits, and loss_fn param `from_logits` is set to True
         loss = self.loss_fn(logits_mask, mask)
-        if stage == 'train':
-            logging.info(f"Epoch: {self.current_epoch}, Loss: {loss}")
 
         # Let's compute metrics for some threshold
         # first convert mask values to probabilites, then
@@ -168,10 +166,6 @@ class PetModel(pl.LightningModule):
 
     def test_epoch_end(self, outputs):
         return self.shared_epoch_end(outputs, "test")
-
-    def epoch_end(self, epoch, result):
-        logging.info("Epoch [{}], val_loss: {:.4f}, val_acc: {:.4f}".format(epoch, result['val_loss'],
-                                                                     result['val_acc']))  # This part
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=0.0001)
