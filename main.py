@@ -101,8 +101,10 @@ class PetModel(pl.LightningModule):
 
         # Predicted mask contains logits, and loss_fn param `from_logits` is set to True
         loss = self.loss_fn(logits_mask, mask)
+        if stage == 'train':
+            logging.info(f"Epoch: {self.current_epoch}, Loss: {loss}")
 
-        # Lets compute metrics for some threshold
+        # Let's compute metrics for some threshold
         # first convert mask values to probabilites, then
         # apply thresholding
         prob_mask = logits_mask.sigmoid()
@@ -147,7 +149,6 @@ class PetModel(pl.LightningModule):
             f"{stage}_dataset_iou": dataset_iou,
         }
 
-        logging.info(f"Epoch: {self.current_epoch}, Stage: {stage}")
         self.log_dict(metrics, prog_bar=True)
 
     def training_step(self, batch, batch_idx):
