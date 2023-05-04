@@ -9,6 +9,7 @@ from pprint import pprint
 from torch.utils.data import DataLoader
 
 from segmentation_models_pytorch.datasets import SimpleOxfordPetDataset
+from pytorch_lightning.loggers import CSVLogger
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
 logging.info("Start!")
@@ -174,7 +175,8 @@ logging.info("Model instantiation")
 model = PetModel("FPN", "resnet34", in_channels=3, out_classes=1)
 
 logging.info("Training")
-trainer = pl.Trainer(gpus=1, max_epochs=40)
+logger = CSVLogger("logs", name="my_exp_name")
+trainer = pl.Trainer(gpus=1, max_epochs=40, logger=logger)
 trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
 
 # run validation dataset
