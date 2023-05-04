@@ -15,7 +15,7 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(nam
 logging.info("Start!")
 
 # redirect lightning logging to file
-logger = logging.getLogger("lightning.pytorch.core")
+logger = logging.getLogger("lightning.pytorch")
 logger.addHandler(logging.FileHandler("core.log"))
 
 
