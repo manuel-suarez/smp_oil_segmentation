@@ -14,14 +14,18 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(nam
 logging.info("Start!")
 
 # download data
-root = "."
+data_dir = "data"
+figures_dir = "figures"
+results_dir = "results"
+os.makedirs(figures_dir)
+os.makedirs(results_dir)
 #SimpleOxfordPetDataset.download(root)
 
 # init train, val, test sets
 logging.info("Dataset configuration")
-train_dataset = SimpleOxfordPetDataset(root, "train")
-valid_dataset = SimpleOxfordPetDataset(root, "valid")
-test_dataset = SimpleOxfordPetDataset(root, "test")
+train_dataset = SimpleOxfordPetDataset(data_dir, "train")
+valid_dataset = SimpleOxfordPetDataset(data_dir, "valid")
+test_dataset = SimpleOxfordPetDataset(data_dir, "test")
 
 logging.info(f"Train size: {len(train_dataset)}")
 logging.info(f"Valid size: {len(valid_dataset)}")
