@@ -17,8 +17,8 @@ logging.info("Start!")
 data_dir = "data"
 figures_dir = "figures"
 results_dir = "results"
-os.makedirs(figures_dir)
-os.makedirs(results_dir)
+os.makedirs(figures_dir, exist_ok=True)
+os.makedirs(results_dir, exist_ok=True)
 #SimpleOxfordPetDataset.download(root)
 
 # init train, val, test sets
