@@ -36,30 +36,20 @@ train_dataloader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_wo
 valid_dataloader = DataLoader(valid_dataset, batch_size=16, shuffle=False, num_workers=n_cpu)
 test_dataloader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=n_cpu)
 
+def save_figure(dataset, name, figname):
+    sample = dataset[0]
+    plt.subplot(1, 2, 1)
+    plt.imshow(sample["image"].transpose(1, 2, 0))  # for visualization we have to transpose back to HWC
+    plt.subplot(1, 2, 2)
+    plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
+    plt.savefig(os.path.join(figures_dir, figname))
+    logging.info(f"{name} image shape: {sample['image'].shape}")
+
+
 # Samples
-sample = train_dataset[0]
-plt.subplot(1,2,1)
-plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to transpose back to HWC
-plt.subplot(1,2,2)
-plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
-plt.savefig("figure_01.png")
-logging.info(f"Train image shape: {sample['image'].shape}")
-
-sample = valid_dataset[0]
-plt.subplot(1,2,1)
-plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to transpose back to HWC
-plt.subplot(1,2,2)
-plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
-plt.savefig("figure_02.png")
-logging.info(f"Valid image shape: {sample['image'].shape}")
-
-sample = test_dataset[0]
-plt.subplot(1,2,1)
-plt.imshow(sample["image"].transpose(1, 2, 0)) # for visualization we have to transpose back to HWC
-plt.subplot(1,2,2)
-plt.imshow(sample["mask"].squeeze())  # for visualization we have to remove 3rd dimension of mask
-plt.savefig("figure_03.png")
-logging.info(f"Test image shape: {sample['image'].shape}")
+save_figure(train_dataset, "Train", "figure_01.png")
+save_figure(valid_dataset, "Valid", "figure_02.png")
+save_figure(test_dataset, "Test", "figure_03.png")
 
 logging.info("Model definition")
 class PetModel(pl.LightningModule):
@@ -222,6 +212,6 @@ for idx, (image, gt_mask, pr_mask) in enumerate(zip(batch["image"], batch["mask"
     plt.title("Prediction")
     plt.axis("off")
 
-    plt.savefig(f"result_{str(idx).zfill(2)}.png")
+    plt.savefig(os.path.join(results_dir, f"result_{str(idx).zfill(2)}.png"))
 
 logging.info('Done!')
