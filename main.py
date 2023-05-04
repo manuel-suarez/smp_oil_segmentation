@@ -167,6 +167,10 @@ class PetModel(pl.LightningModule):
     def test_epoch_end(self, outputs):
         return self.shared_epoch_end(outputs, "test")
 
+    def epoch_end(self, epoch, result):
+        logging.info("Epoch [{}], val_loss: {:.4f}, val_acc: {:.4f}".format(epoch, result['val_loss'],
+                                                                     result['val_acc']))  # This part
+
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=0.0001)
 
@@ -174,7 +178,7 @@ logging.info("Model instantiation")
 model = PetModel("FPN", "resnet34", in_channels=3, out_classes=1)
 
 logging.info("Training")
-trainer = pl.Trainer(gpus=1, max_epochs=5)
+trainer = pl.Trainer(gpus=1, max_epochs=40)
 trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
 
 # run validation dataset
