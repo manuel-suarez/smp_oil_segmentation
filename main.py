@@ -153,6 +153,7 @@ class PetModel(pl.LightningModule):
         return self.shared_step(batch, "train")
 
     def training_epoch_end(self, outputs):
+        logging.info(f"Epoch: {self.current_epoch}")
         return self.shared_epoch_end(outputs, "train")
 
     def validation_step(self, batch, batch_idx):
