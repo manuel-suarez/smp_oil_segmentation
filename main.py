@@ -14,6 +14,11 @@ from pytorch_lightning.loggers import CSVLogger
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
 logging.info("Start!")
 
+# redirect lightning logging to file
+logger = logging.getLogger("lightning.pytorch.core")
+logger.addHandler(logging.FileHandler("core.log"))
+
+
 # download data
 data_dir = "data"
 figures_dir = "figures"
