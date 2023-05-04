@@ -10,12 +10,15 @@ from torch.utils.data import DataLoader
 
 from segmentation_models_pytorch.datasets import SimpleOxfordPetDataset
 
-logging.basicConfig(filename='app.log', filemode='w', format='%(name)s %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
+logging.info("Start!")
+
 # download data
 root = "."
 #SimpleOxfordPetDataset.download(root)
 
 # init train, val, test sets
+logging.info("Dataset configuration")
 train_dataset = SimpleOxfordPetDataset(root, "train")
 valid_dataset = SimpleOxfordPetDataset(root, "valid")
 test_dataset = SimpleOxfordPetDataset(root, "test")
