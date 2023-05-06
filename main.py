@@ -57,10 +57,8 @@ save_figure(train_dataset, "Train", "figure_01.png")
 save_figure(valid_dataset, "Val", "figure_02.png")
 save_figure(test_dataset, "Test", "figure_03.png")
 
-exit(-1)
-
 logging.info("Model definition")
-class PetModel(pl.LightningModule):
+class OilModel(pl.LightningModule):
     def __init__(self, arch, encoder_name, in_channels, out_classes, **kwargs):
         super().__init__()
         self.model = smp.create_model(
@@ -179,7 +177,7 @@ class PetModel(pl.LightningModule):
         return torch.optim.Adam(self.parameters(), lr=0.0001)
 
 logging.info("Model instantiation")
-model = PetModel("FPN", "resnet34", in_channels=3, out_classes=1)
+model = OilModel("FPN", "resnet34", in_channels=3, out_classes=1)
 
 logging.info("Training")
 logger = CSVLogger("logs", name="my_exp_name")
