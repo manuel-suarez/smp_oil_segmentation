@@ -9,6 +9,7 @@ from pprint import pprint
 from torch.utils.data import DataLoader
 
 from dataset import OilSpillDataset
+from segmentation_models_pytorch.datasets import SimpleOxfordPetDataset
 from pytorch_lightning.loggers import CSVLogger
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)

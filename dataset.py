@@ -36,7 +36,12 @@ class OilSpillDataset(torch.utils.data.Dataset):
 
         # Need to expand
         image = np.expand_dims(np.array(Image.open(image_path).convert('L')), axis=2)
-        mask = self._preprocess_mask(np.expand_dims(np.array(Image.open(mask_path)), axis=2), self.class_to_mask)
+        mask = self._preprocess_mask(np.array(Image.open(mask_path)), self.class_to_mask)
+
+        # convert to other format HWC -> CHW
+        image = np.moveaxis(image, -1, 0)
+        mask = np.expand_dims(mask, 0)
+
         sample = dict(image=image, mask=mask)
         if self.transform is not None:
             sample = self.transform(sample)
