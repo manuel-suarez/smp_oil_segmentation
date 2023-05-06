@@ -8,7 +8,7 @@ import segmentation_models_pytorch as smp
 from pprint import pprint
 from torch.utils.data import DataLoader
 
-from segmentation_models_pytorch.datasets import SimpleOxfordPetDataset
+from dataset import OilSpillDataset
 from pytorch_lightning.loggers import CSVLogger
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
@@ -20,18 +20,17 @@ logger.addHandler(logging.FileHandler("core.log"))
 
 
 # download data
-data_dir = "data"
+data_dir = "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256"
 figures_dir = "figures"
 results_dir = "results"
 os.makedirs(figures_dir, exist_ok=True)
 os.makedirs(results_dir, exist_ok=True)
-#SimpleOxfordPetDataset.download(root)
 
 # init train, val, test sets
 logging.info("Dataset configuration")
-train_dataset = SimpleOxfordPetDataset(data_dir, "train")
-valid_dataset = SimpleOxfordPetDataset(data_dir, "valid")
-test_dataset = SimpleOxfordPetDataset(data_dir, "test")
+train_dataset = OilSpillDataset(data_dir, "train")
+valid_dataset = OilSpillDataset(data_dir, "val")
+test_dataset = OilSpillDataset(data_dir, "test")
 
 logging.info(f"Train size: {len(train_dataset)}")
 logging.info(f"Valid size: {len(valid_dataset)}")
@@ -54,8 +53,10 @@ def save_figure(dataset, name, figname):
 
 # Samples
 save_figure(train_dataset, "Train", "figure_01.png")
-save_figure(valid_dataset, "Valid", "figure_02.png")
+save_figure(valid_dataset, "Val", "figure_02.png")
 save_figure(test_dataset, "Test", "figure_03.png")
+
+exit(-1)
 
 logging.info("Model definition")
 class PetModel(pl.LightningModule):
