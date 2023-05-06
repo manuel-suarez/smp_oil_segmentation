@@ -181,7 +181,7 @@ model = OilModel("FPN", "resnet34", in_channels=3, out_classes=1)
 
 logging.info("Training")
 logger = CSVLogger("logs", name="my_exp_name")
-trainer = pl.Trainer(gpus=1, max_epochs=40, logger=logger)
+trainer = pl.Trainer(gpus=1, max_epochs=100, logger=logger)
 trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
 
 # run validation dataset
