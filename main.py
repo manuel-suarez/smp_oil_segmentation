@@ -30,9 +30,9 @@ os.makedirs(results_dir, exist_ok=True)
 
 # init train, val, test sets
 logging.info("Dataset configuration")
-train_dataset = OilSpillDataset(data_dir, "train")
-valid_dataset = OilSpillDataset(data_dir, "val")
-test_dataset = OilSpillDataset(data_dir, "test")
+train_dataset = OilSpillDataset(data_dir, "train", class_to_mask='look-alike')
+valid_dataset = OilSpillDataset(data_dir, "val", class_to_mask='look-alike')
+test_dataset = OilSpillDataset(data_dir, "test", class_to_mask='look-alike')
 
 logging.info(f"Train size: {len(train_dataset)}")
 logging.info(f"Valid size: {len(valid_dataset)}")
