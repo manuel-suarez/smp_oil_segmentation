@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import logging
 import os
+
+figures_dir = "figures"
+
 def save_figure(dataset, name, figname):
     sample = dataset[5]
     plt.subplot(1, 2, 1)
