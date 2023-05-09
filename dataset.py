@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 
 class OilSpillDataset(torch.utils.data.Dataset):
-    def __init__(self, root, mode="train", class_to_mask='oil spill', transform=None):
+    def __init__(self, root, mode="train", class_to_mask='all', transform=None):
         assert mode in {"train", "val", "test"}
         # Classes
         # Oil spill = 1 (cyan)
@@ -13,7 +13,7 @@ class OilSpillDataset(torch.utils.data.Dataset):
         # Ships     = 3 (brown)
         # Land      = 4 (green)
         # Sea       = 0 (background-black)
-        assert class_to_mask in {'oil spill', 'look-alike', 'ship', 'land'}
+        assert class_to_mask in {'all', 'oil spill', 'look-alike', 'ship', 'land'}
 
         self.root = root
         self.mode = mode
@@ -56,10 +56,13 @@ class OilSpillDataset(torch.utils.data.Dataset):
         # Land      = 4 (green)
         # Sea       = 0 (background-black)
         mask = mask.astype(np.float32)
+        # If class_to_mask is 'all' then we return mask value (with all values)
+        if class_to_mask == 'all':
+            return mask
         if class_to_mask == 'oil spill':
             mask[mask == 2] = 0.0
             mask[mask == 3] = 0.0
-            mask[mask == 4] = 0.00
+            mask[mask == 4] = 0.0
         elif class_to_mask == 'look-alike':
             mask[mask == 1] = 0.0
             mask[mask == 2] = 1.0

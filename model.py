@@ -7,6 +7,7 @@ class OilModel(pl.LightningModule):
         self.model = smp.create_model(
             arch, encoder_name=encoder_name, in_channels=in_channels, classes=out_classes, **kwargs
         )
+        self.classes = out_classes
 
         # preprocessing parameters for image
         params = smp.encoders.get_preprocessing_params(encoder_name)
@@ -14,7 +15,10 @@ class OilModel(pl.LightningModule):
         self.register_buffer("mean", torch.tensor(params["mean"]).view(1, 3, 1, 1))
 
         # for image segmentation dice loss could be the best first choice
-        self.loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
+        if out_classes == 1:
+            self.loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
+        else:
+            self.loss_fn = smp.losses.DiceLoss(smp.losses.MULTICLASS_MODE, from_logits=True)
 
     def forward(self, image):
         # normalize image here
@@ -63,7 +67,10 @@ class OilModel(pl.LightningModule):
         # but for now we just compute true positive, false positive, false negative and
         # true negative 'pixels' for each image and class
         # these values will be aggregated in the end of an epoch
-        tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="binary")
+        if self.classes == 1:
+            tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="binary")
+        else:
+            tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="multiclass")
 
         return {
             "loss": loss,
