@@ -22,7 +22,8 @@ logger.addHandler(logging.FileHandler("core.log"))
 data_dir = "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256"
 
 # init train, val, test sets
-for arch in ['unet', 'unetplusplus', 'manet', 'linknet', 'fpn', 'pspnet', 'deeplabv3', 'deeplabv3plus', 'pan']:
+#for arch in ['unet', 'unetplusplus', 'manet', 'linknet', 'fpn', 'pspnet', 'deeplabv3', 'deeplabv3plus', 'pan']:
+for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
     logging.info(f"Architecture: {arch}")
     logging.info("1.- Dataset configuration")
     train_dataset = OilSpillDataset(data_dir, "train")
