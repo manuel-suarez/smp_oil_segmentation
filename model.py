@@ -18,7 +18,7 @@ class OilModel(pl.LightningModule):
         if out_classes == 1:
             self.loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
         else:
-            self.loss_fn = smp.losses.DiceLoss(smp.losses.MULTICLASS_MODE, from_logits=True)
+            self.loss_fn = smp.losses.DiceLoss(smp.losses.MULTICLASS_MODE, classes=[0,1,2,3,4], from_logits=True)
 
     def forward(self, image):
         # normalize image here
