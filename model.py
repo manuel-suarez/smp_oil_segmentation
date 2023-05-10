@@ -46,6 +46,7 @@ class OilModel(pl.LightningModule):
         # Shape of the mask should be [batch_size, num_classes, height, width]
         # for binary segmentation num_classes = 1
         assert mask.ndim == 4
+        print(mask.shape)
 
         # Check that mask values in between 0 and 1, NOT 0 and 255 for binary segmentation
         assert mask.max() <= self.classes and mask.min() >= 0
