@@ -26,9 +26,10 @@ data_dir = "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256"
 for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
     logging.info(f"Architecture: {arch}")
     logging.info("1.- Dataset configuration")
-    train_dataset = OilSpillDataset(data_dir, "train")
-    valid_dataset = OilSpillDataset(data_dir, "val")
-    test_dataset = OilSpillDataset(data_dir, "test")
+    classes = ['oil spill']
+    train_dataset = OilSpillDataset(data_dir, "train", classes=classes)
+    valid_dataset = OilSpillDataset(data_dir, "val", classes=classes)
+    test_dataset = OilSpillDataset(data_dir, "test", classes=classes)
 
     logging.info(f"Train size: {len(train_dataset)}")
     logging.info(f"Valid size: {len(valid_dataset)}")
