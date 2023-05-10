@@ -10,7 +10,7 @@ def save_figure(dataset, name, figname):
     plt.subplot(1, 2, 1)
     image = sample["image"].transpose(1, 2, 0)
     logging.info(f"Image shape: {image.shape}")
-    plt.imshow()  # for visualization we have to transpose back to HWC
+    plt.imshow(image)  # for visualization we have to transpose back to HWC
     plt.subplot(1, 2, 2)
     mask = sample["mask"].squeeze()
     logging.info(f"Mask shape: {mask.shape}")
