@@ -1,6 +1,7 @@
 import os
 import torch
 import numpy as np
+import logging
 
 from PIL import Image
 
@@ -56,9 +57,15 @@ class OilSpillDataset(torch.utils.data.Dataset):
         # Land      = 4 (green)
         # Sea       = 0 (background-black)
         mask = mask.astype(np.float32)
-        # If class_to_mask is 'all' then we return mask value (with all values)
+        # If class_to_mask is 'all' then we create a tensor for every mask class
         if class_to_mask == 'all':
-            return mask
+            mask_all = np.zeros((5, *mask.shape))
+            mask_all[0, mask == 1] = 1
+            mask_all[1, mask == 2] = 1
+            mask_all[2, mask == 3] = 1
+            mask_all[3, mask == 3] = 1
+            mask_all[4, mask == 4] = 1
+            return mask_all
         if class_to_mask == 'oil spill':
             mask[mask == 2] = 0.0
             mask[mask == 3] = 0.0
