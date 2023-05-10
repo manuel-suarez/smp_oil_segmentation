@@ -6,7 +6,7 @@ figures_dir = "figures"
 
 def save_figure(dataset, name, figname):
     sample = dataset[5]
-    logging.info(f"Sample shape: {sample.shape}")
+
     plt.subplot(1, 2, 1)
     image = sample["image"].transpose(1, 2, 0)
     logging.info(f"Image shape: {image.shape}")
