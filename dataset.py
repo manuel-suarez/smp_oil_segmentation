@@ -41,7 +41,8 @@ class OilSpillDataset(torch.utils.data.Dataset):
 
         # convert to other format HWC -> CHW
         image = np.moveaxis(image, -1, 0)
-        mask = np.expand_dims(mask, 0)
+        if self.class_to_mask != 'all':
+            mask = np.expand_dims(mask, 0) # Don't need to add extra dimension (in multiclass example)
 
         sample = dict(image=image, mask=mask)
         if self.transform is not None:
