@@ -6,10 +6,14 @@ figures_dir = "figures"
 
 def save_figure(dataset, name, figname):
     sample = dataset[5]
+    logging.info(f"Sample shape: {sample.shape}")
     plt.subplot(1, 2, 1)
-    plt.imshow(sample["image"].transpose(1, 2, 0))  # for visualization we have to transpose back to HWC
+    image = sample["image"].transpose(1, 2, 0)
+    logging.info(f"Image shape: {image.shape}")
+    plt.imshow()  # for visualization we have to transpose back to HWC
     plt.subplot(1, 2, 2)
     mask = sample["mask"].squeeze()
+    logging.info(f"Mask shape: {mask.shape}")
     # Display first mask only
     plt.imshow(mask[0])  # for visualization we have to remove 3rd dimension of mask
     plt.savefig(figname)
