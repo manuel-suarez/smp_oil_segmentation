@@ -47,7 +47,7 @@ class OilSpillDataset(torch.utils.data.Dataset):
         mask = np.array(Image.open(mask_path))
         masks = [(mask == v) for v in self.classes_values]
         mask = np.stack(masks, axis=-1).astype('float')
-        mask = np.moveaxis(mask, -1, 0)
+        #mask = np.moveaxis(mask, -1, 0)
         logging.info(f"Mask shape: {mask.shape}")
 
         sample = dict(image=image, mask=mask)
