@@ -39,7 +39,7 @@ class OilSpillDataset(torch.utils.data.Dataset):
         mask_path = os.path.join(self.masks_directory, filename + '.png')
 
         # Need to expand
-        image = np.expand_dims(np.array(Image.open(image_path).convert('L')), axis=2)
+        image = np.array(Image.open(image_path).convert('L'))
         # convert to other format HWC -> CHW
         image = np.moveaxis(image, -1, 0)
         logging.info(f"Image shape: {image.shape}")
