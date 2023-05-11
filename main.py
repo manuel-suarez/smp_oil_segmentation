@@ -26,7 +26,7 @@ data_dir = "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256"
 for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
     logging.info(f"Architecture: {arch}")
     logging.info("1.- Dataset configuration")
-    classes = ['oil spill']
+    classes = ['oil spill', 'look-alike']
     train_dataset = OilSpillDataset(data_dir, "train", classes=classes)
     valid_dataset = OilSpillDataset(data_dir, "val", classes=classes)
     test_dataset = OilSpillDataset(data_dir, "test", classes=classes)
@@ -51,7 +51,7 @@ for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
     save_figure(test_dataset, "Test", os.path.join(figures_dir, "figure_03.png"))
 
     logging.info("2.- Model instantiation")
-    model = OilModel(arch, "resnet34", in_channels=3, out_classes=5)
+    model = OilModel(arch, "resnet34", in_channels=3, out_classes=2)
 
     logging.info("3.- Training")
     logger = CSVLogger(f"{arch}_logs", name="my_exp_name")
