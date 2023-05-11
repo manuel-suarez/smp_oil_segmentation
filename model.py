@@ -23,6 +23,7 @@ class OilModel(pl.LightningModule):
 
     def forward(self, image):
         # normalize image here
+        logging.info(f"Forward, image shape: {image.shape}")
         image = (image - self.mean) / self.std
         mask = self.model(image)
         return mask
