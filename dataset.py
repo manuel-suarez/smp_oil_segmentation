@@ -42,13 +42,13 @@ class OilSpillDataset(torch.utils.data.Dataset):
         image = np.expand_dims(np.array(Image.open(image_path).convert('L')), axis=2)
         # convert to other format HWC -> CHW
         image = np.moveaxis(image, -1, 0)
-        #logging.info(f"Image shape: {image.shape}")
+        logging.info(f"Image shape: {image.shape}")
         # mask
         mask = np.array(Image.open(mask_path))
         masks = [(mask == v) for v in self.classes_values]
         mask = np.stack(masks, axis=-1).astype('float')
         mask = np.moveaxis(mask, -1, 0)
-        #logging.info(f"Mask shape: {mask.shape}")
+        logging.info(f"Mask shape: {mask.shape}")
 
         sample = dict(image=image, mask=mask)
         if self.transform is not None:
