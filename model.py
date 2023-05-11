@@ -16,10 +16,10 @@ class OilModel(pl.LightningModule):
         self.register_buffer("mean", torch.tensor(params["mean"]).view(1, 3, 1, 1))
 
         # for image segmentation dice loss could be the best first choice
-        if out_classes == 1:
+        if self.classes == 1:
             self.loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
         else:
-            self.loss_fn = smp.losses.DiceLoss(smp.losses.MULTICLASS_MODE, classes=[0,1,2,3,4], from_logits=True)
+            self.loss_fn = smp.losses.DiceLoss(smp.losses.MULTICLASS_MODE, from_logits=True)
 
     def forward(self, image):
         # normalize image here
@@ -29,17 +29,22 @@ class OilModel(pl.LightningModule):
 
     def shared_step(self, batch, stage):
         image = batch["image"]
+        batch_size = len(batch)
+        h, w = image.shape[2:]
+        logging.info(f"Batch size: {batch_size}, h = {h}, w = {w}")
 
         # Shape of the image should be (batch_size, num_channels, height, width)
         # if you work with grayscale images, expand channels dim to have [batch_size, 1, height, width]
+        logging.info('Verify image shape')
+        logging.info(image.shape)
         assert image.ndim == 4
+        assert image.shape == (batch_size, 1, h, w)
 
         # Check that image dimensions are divisible by 32,
         # encoder and decoder connected by `skip connections` and usually encoder have 5 stages of
         # downsampling by factor 2 (2 ~ 5 = 32); e.g. if we have image with shape 65x65 we will have
         # following shapes of features in encoder and decoder: 84, 42, 21, 10, 5 -> 5, 10, 20, 40, 80
         # and we will get an error trying to concat these features
-        h, w = image.shape[2:]
         assert h % 32 == 0 and w % 32 == 0
 
         mask = batch["mask"]
@@ -49,6 +54,7 @@ class OilModel(pl.LightningModule):
         logging.info('Verify mask shape')
         logging.info(mask.shape)
         assert mask.ndim == 4
+        assert mask.shape == (batch_size, self.classes, h, w)
 
         # Check that mask values in between 0 and 1, NOT 0 and 255 for binary segmentation
         assert mask.max() <= self.classes and mask.min() >= 0
