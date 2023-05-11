@@ -9,15 +9,15 @@ def save_figure(dataset, name, figname):
 
     plt.subplot(1, 2, 1)
     image = sample["image"]
-    logging.info(f"Image shape: {image.shape}")
+    # logging.info(f"Image shape: {image.shape}")
     image = image.transpose(1, 2, 0)
-    logging.info(f"Image transpose shape: {image.shape}")
+    # logging.info(f"Image transpose shape: {image.shape}")
     plt.imshow(image)  # for visualization we have to transpose back to HWC
     plt.subplot(1, 2, 2)
     mask = sample["mask"]
-    logging.info(f"Mask shape: {mask.shape}")
+    # logging.info(f"Mask shape: {mask.shape}")
     mask = mask.squeeze()
-    logging.info(f"Mask squeeze shape: {mask.shape}")
+    # logging.info(f"Mask squeeze shape: {mask.shape}")
     # Display first mask only
     plt.imshow(mask[0])
     plt.savefig(figname)
