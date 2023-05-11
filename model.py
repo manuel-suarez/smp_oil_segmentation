@@ -36,7 +36,7 @@ class OilModel(pl.LightningModule):
         logging.info('Verify image shape')
         logging.info(image.shape)
         assert image.ndim == 4
-        assert image.shape == (batch_size, 1, h, w)
+        assert image.shape == (16, 1, h, w)
 
         # Check that image dimensions are divisible by 32,
         # encoder and decoder connected by `skip connections` and usually encoder have 5 stages of
@@ -52,7 +52,7 @@ class OilModel(pl.LightningModule):
         logging.info('Verify mask shape')
         logging.info(mask.shape)
         assert mask.ndim == 4
-        assert mask.shape == (batch_size, self.classes, h, w)
+        assert mask.shape == (16, self.classes, h, w)
 
         # Check that mask values in between 0 and 1, NOT 0 and 255 for binary segmentation
         assert mask.max() <= self.classes and mask.min() >= 0
