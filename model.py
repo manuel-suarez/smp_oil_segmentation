@@ -29,9 +29,7 @@ class OilModel(pl.LightningModule):
 
     def shared_step(self, batch, stage):
         image = batch["image"]
-        batch_size = len(batch)
         h, w = image.shape[2:]
-        logging.info(f"Batch size: {batch_size}, h = {h}, w = {w}")
 
         # Shape of the image should be (batch_size, num_channels, height, width)
         # if you work with grayscale images, expand channels dim to have [batch_size, 1, height, width]
