@@ -11,7 +11,7 @@ class OilModel(pl.LightningModule):
         self.classes = out_classes
 
         # preprocessing parameters for image
-        params = smp.encoders.get_preprocessing_params(encoder_name)
+        params = smp.encoders.get_preprocessing_params(encoder_name, pretrained=None)
         self.register_buffer("std", torch.tensor(params["std"]).view(1, 3, 1, 1))
         self.register_buffer("mean", torch.tensor(params["mean"]).view(1, 3, 1, 1))
 
