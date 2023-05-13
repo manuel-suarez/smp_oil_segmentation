@@ -35,8 +35,7 @@ class OilModel(pl.LightningModule):
 
         # Shape of the image should be (batch_size, num_channels, height, width)
         # if you work with grayscale images, expand channels dim to have [batch_size, 1, height, width]
-        logging.info('Verify image shape')
-        logging.info(image.shape)
+        logging.debug(f"Shared step, stage: {stage}, image shape: {image.shape}")
         assert image.ndim == 4
         assert image.shape == (16, 3, h, w)
 
@@ -51,7 +50,7 @@ class OilModel(pl.LightningModule):
 
         # Shape of the mask should be [batch_size, num_classes, height, width]
         # for binary segmentation num_classes = 1
-        logging.info('Verify mask shape')
+        logging.debug(f"Shared step, stage: {stage}, mask shape: {mask.shape}")
         logging.info(mask.shape)
         assert mask.ndim == 4
         assert mask.shape == (16, self.classes, h, w)
