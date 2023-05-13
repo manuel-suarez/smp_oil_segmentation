@@ -37,7 +37,7 @@ class OilModel(pl.LightningModule):
         logging.info('Verify image shape')
         logging.info(image.shape)
         assert image.ndim == 4
-        assert image.shape == (16, 1, h, w)
+        assert image.shape == (16, 3, h, w)
 
         # Check that image dimensions are divisible by 32,
         # encoder and decoder connected by `skip connections` and usually encoder have 5 stages of
