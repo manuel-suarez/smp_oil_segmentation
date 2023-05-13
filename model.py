@@ -79,7 +79,7 @@ class OilModel(pl.LightningModule):
         if self.classes == 1:
             tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="binary")
         else:
-            tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="multiclass", num_classes=None)
+            tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="multiclass", num_classes=self.classes)
 
         return {
             "loss": loss,
