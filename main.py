@@ -51,7 +51,7 @@ for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
     save_figure(test_dataset, "Test", os.path.join(figures_dir, "figure_03.png"))
 
     logging.info("2.- Model instantiation")
-    model = OilModel(arch, "resnet34", in_channels=1, out_classes=len(classes))
+    model = OilModel(arch, "resnet34", in_channels=3, out_classes=len(classes))
 
     logging.info("3.- Training")
     logger = CSVLogger(f"{arch}_logs", name="my_exp_name")
