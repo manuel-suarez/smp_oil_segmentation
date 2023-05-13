@@ -33,9 +33,9 @@ def test_model(model, batch, results_dir):
     for idx, (image, gt_mask, pr_mask) in enumerate(zip(batch["image"], batch["mask"], pr_masks)):
         plt.figure(figsize=(10, 5))
 
-        logging.info(
+        logging.debug(
             f"Test model, image shape: {image.shape}, gt_mask shape: {gt_mask.shape}, prediction mask shape: {pr_mask.shape}")
-        logging.info(
+        logging.debug(
             f"Squeeze, image shape: {image.numpy().transpose(1, 2, 0).shape}, "
             f"gt_mask shape: {gt_mask.numpy().transpose(1, 2, 0).shape}, "
             f"prediction mask shape: {pr_mask.numpy().transpose(1, 2, 0).shape}")
