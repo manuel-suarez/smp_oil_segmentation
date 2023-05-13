@@ -24,7 +24,7 @@ class OilModel(pl.LightningModule):
 
     def forward(self, image):
         # normalize image here
-        logging.info(f"Forward, image shape: {image.shape}")
+        logging.debug(f"Forward, image shape: {image.shape}")
         image = (image - self.mean) / self.std
         mask = self.model(image)
         return mask
@@ -51,7 +51,6 @@ class OilModel(pl.LightningModule):
         # Shape of the mask should be [batch_size, num_classes, height, width]
         # for binary segmentation num_classes = 1
         logging.debug(f"Shared step, stage: {stage}, mask shape: {mask.shape}")
-        logging.info(mask.shape)
         assert mask.ndim == 4
         assert mask.shape == (16, self.classes, h, w)
 
