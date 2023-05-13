@@ -33,19 +33,24 @@ def test_model(model, batch, results_dir):
     for idx, (image, gt_mask, pr_mask) in enumerate(zip(batch["image"], batch["mask"], pr_masks)):
         plt.figure(figsize=(10, 5))
 
-        logging.info(f"Test model, image shape: {image.shape}, gt_mask shape: {gt_mask.shape}, prediction mask shape: {pr_mask.shape}")
+        logging.info(
+            f"Test model, image shape: {image.shape}, gt_mask shape: {gt_mask.shape}, prediction mask shape: {pr_mask.shape}")
+        logging.info(
+            f"Squeeze, image shape: {image.numpy().transpose(1, 2, 0).shape}, "
+            f"gt_mask shape: {gt_mask.numpy().transpose(1, 2, 0).shape}, "
+            f"prediction mask shape: {pr_mask.numpy().transpose(1, 2, 0).shape}")
         plt.subplot(1, 3, 1)
         plt.imshow(image.numpy().transpose(1, 2, 0))  # convert CHW -> HWC
         plt.title("Image")
         plt.axis("off")
 
         plt.subplot(1, 3, 2)
-        plt.imshow(gt_mask.numpy().squeeze()) # just squeeze classes dim, because we have only one class
+        plt.imshow(gt_mask.numpy().transpose(1, 2, 0)) # just squeeze classes dim, because we have only one class
         plt.title("Ground truth")
         plt.axis("off")
 
         plt.subplot(1, 3, 3)
-        plt.imshow(pr_mask.numpy().squeeze()) # just squeeze classes dim, because we have only one class
+        plt.imshow(pr_mask.numpy().transpose(1, 2, 0)) # just squeeze classes dim, because we have only one class
         plt.title("Prediction")
         plt.axis("off")
 
