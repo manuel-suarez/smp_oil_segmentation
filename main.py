@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 
 from dataset import OilSpillDataset
 from model import OilModel
-from utils import save_figure
+from utils import save_figure, test_model
 from pytorch_lightning.loggers import CSVLogger
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
@@ -70,29 +70,6 @@ for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
 
     logging.info("6.- Result visualization")
     batch = next(iter(test_dataloader))
-    with torch.no_grad():
-        model.eval()
-        logits = model(batch["image"])
-    pr_masks = logits.sigmoid()
-
-    for idx, (image, gt_mask, pr_mask) in enumerate(zip(batch["image"], batch["mask"], pr_masks)):
-        plt.figure(figsize=(10, 5))
-
-        plt.subplot(1, 3, 1)
-        plt.imshow(image.numpy().transpose(1, 2, 0))  # convert CHW -> HWC
-        plt.title("Image")
-        plt.axis("off")
-
-        plt.subplot(1, 3, 2)
-        plt.imshow(gt_mask.numpy().squeeze()) # just squeeze classes dim, because we have only one class
-        plt.title("Ground truth")
-        plt.axis("off")
-
-        plt.subplot(1, 3, 3)
-        plt.imshow(pr_mask.numpy().squeeze()) # just squeeze classes dim, because we have only one class
-        plt.title("Prediction")
-        plt.axis("off")
-
-        plt.savefig(os.path.join(results_dir, f"result_{str(idx).zfill(2)}.png"))
+    test_model(model, batch, results_dir)
 
 logging.info('Done!')
