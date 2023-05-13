@@ -56,7 +56,7 @@ class OilModel(pl.LightningModule):
         assert mask.shape == (16, self.classes, h, w)
 
         # Check that mask values in between 0 and 1, NOT 0 and 255 for binary segmentation
-        assert mask.max() <= self.classes and mask.min() >= 0
+        assert mask.max() <= 1 and mask.min() >= 0
 
         logits_mask = self.forward(image)
 
