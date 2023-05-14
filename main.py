@@ -1,5 +1,6 @@
 import os
 import logging
+import argparse
 import pytorch_lightning as pl
 
 from torch.utils.data import DataLoader
@@ -8,12 +9,6 @@ from dataset import OilSpillDataset
 from model import OilModel
 from utils import save_figure, test_model
 from pytorch_lightning.loggers import CSVLogger
-
-logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
-
-# redirect lightning logging to file
-logger = logging.getLogger("lightning.pytorch")
-logger.addHandler(logging.FileHandler("core.log"))
 
 
 def create_datasets(data_dir, classes):
@@ -78,12 +73,25 @@ def process(res_dir, data_dir, arch):
     test_model(model, batch, os.path.join(res_dir, results_dir))
 
 
-def main(res_dir, data_dir):
-    for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
-        process(res_dir, data_dir, arch)
+def main(arch, res_dir, data_dir):
+    process(res_dir, data_dir, arch)
 
 
+parser = argparse.ArgumentParser(
+    prog='Oil spill multiclass segmentation',
+    description='Multiclass segmentation on Oil Spill Dataset',
+    epilog='With a great power comes a great responsability'
+)
+parser.add_argument('arch')
+args = parser.parse_args()
+arch = args['arch']
 #for arch in ['unet', 'unetplusplus', 'manet', 'linknet', 'fpn', 'pspnet', 'deeplabv3', 'deeplabv3plus', 'pan']:
+logging.basicConfig(filename=f"{arch}_app.log", filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
+
+# redirect lightning logging to file
+logger = logging.getLogger("lightning.pytorch")
+logger.addHandler(logging.FileHandler("core.log"))
+
 logging.info("Start!")
-main("results", "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256")
+main(arch, "results", "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256")
 logging.info('Done!')
