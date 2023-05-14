@@ -82,9 +82,9 @@ parser = argparse.ArgumentParser(
     description='Multiclass segmentation on Oil Spill Dataset',
     epilog='With a great power comes a great responsability'
 )
-parser.add_argument('arch')
+parser.add_argument('architecture')
 args = parser.parse_args()
-arch = args['arch']
+arch = args.architecture
 #for arch in ['unet', 'unetplusplus', 'manet', 'linknet', 'fpn', 'pspnet', 'deeplabv3', 'deeplabv3plus', 'pan']:
 logging.basicConfig(filename=f"{arch}_app.log", filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
 
