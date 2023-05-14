@@ -1,7 +1,5 @@
 import os
-import torch
 import logging
-import matplotlib.pyplot as plt
 import pytorch_lightning as pl
 
 from torch.utils.data import DataLoader

@@ -5,6 +5,7 @@ import os
 
 figures_dir = "figures"
 
+
 def save_figure(dataset, name, figname):
     sample = dataset[5]
 
@@ -22,7 +23,9 @@ def save_figure(dataset, name, figname):
     # Display first mask only
     plt.imshow(mask[0])
     plt.savefig(figname)
-    logging.info(f"{name} image shape: {sample['image'].shape}")
+    plt.close()
+    logging.info(f"\tSaving figure {name}, image shape: {sample['image'].shape}")
+
 
 def test_model(model, batch, results_dir):
     with torch.no_grad():
@@ -55,3 +58,4 @@ def test_model(model, batch, results_dir):
         plt.axis("off")
 
         plt.savefig(os.path.join(results_dir, f"result_{str(idx).zfill(2)}.png"))
+        plt.close()
