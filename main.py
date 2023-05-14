@@ -55,7 +55,7 @@ def process(res_dir, data_dir, arch):
 
     logging.info("3.- Training")
     logger = CSVLogger(os.path.join(res_dir, logs_dir), name="my_exp_name")
-    trainer = pl.Trainer(gpus=1, max_epochs=2, logger=logger)
+    trainer = pl.Trainer(gpus=1, max_epochs=100, logger=logger)
     trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
 
     # run validation dataset
