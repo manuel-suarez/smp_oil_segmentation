@@ -12,64 +12,80 @@ from utils import save_figure, test_model
 from pytorch_lightning.loggers import CSVLogger
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s: %(name)s %(levelname)s - %(message)s', level=logging.INFO)
-logging.info("Start!")
 
 # redirect lightning logging to file
 logger = logging.getLogger("lightning.pytorch")
 logger.addHandler(logging.FileHandler("core.log"))
 
-# download data
-data_dir = "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256"
 
-# init train, val, test sets
-#for arch in ['unet', 'unetplusplus', 'manet', 'linknet', 'fpn', 'pspnet', 'deeplabv3', 'deeplabv3plus', 'pan']:
-for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
+def create_datasets(data_dir, classes):
+    return (
+        OilSpillDataset(data_dir, "train", classes=classes),
+        OilSpillDataset(data_dir, "val", classes=classes),
+        OilSpillDataset(data_dir, "test", classes=classes)
+    )
+
+
+def create_dataloaders(n_cpu, train_dataset, valid_dataset, test_dataset):
+    return (
+        DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=n_cpu),
+        DataLoader(valid_dataset, batch_size=16, shuffle=False, num_workers=n_cpu),
+        DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=n_cpu)
+    )
+
+
+def process(res_dir, data_dir, arch):
     logging.info(f"Architecture: {arch}")
     logging.info("1.- Dataset configuration")
-    classes = ['oil spill', 'look-alike', 'ship']
-    train_dataset = OilSpillDataset(data_dir, "train", classes=classes)
-    valid_dataset = OilSpillDataset(data_dir, "val", classes=classes)
-    test_dataset = OilSpillDataset(data_dir, "test", classes=classes)
+    classes = ['oil spill', 'look-alike', 'ship', 'land']
+    train_dataset, valid_dataset, test_dataset = create_datasets(data_dir, classes)
+    logging.info(f"\tTrain dataset size: {len(train_dataset)}, "
+                 f"valid dataset size: {len(valid_dataset)}, "
+                 f"test dataset size: {len(test_dataset)}")
 
-    logging.info(f"Train size: {len(train_dataset)}")
-    logging.info(f"Valid size: {len(valid_dataset)}")
-    logging.info(f"Test size: {len(test_dataset)}")
-
-    n_cpu = os.cpu_count()
-    train_dataloader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=n_cpu)
-    valid_dataloader = DataLoader(valid_dataset, batch_size=16, shuffle=False, num_workers=n_cpu)
-    test_dataloader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=n_cpu)
+    train_dataloader, valid_dataloader, test_dataloader = \
+        create_dataloaders(os.cpu_count(), train_dataset, valid_dataset, test_dataset)
 
     figures_dir = f"{arch}_figures"
     results_dir = f"{arch}_results"
-    os.makedirs(figures_dir, exist_ok=True)
-    os.makedirs(results_dir, exist_ok=True)
+    logs_dir = f"{arch}_logs"
+    os.makedirs(os.path.join(res_dir, figures_dir), exist_ok=True)
+    os.makedirs(os.path.join(res_dir, results_dir), exist_ok=True)
 
     # Samples
-    save_figure(train_dataset, "Train", os.path.join(figures_dir, "figure_01.png"))
-    save_figure(valid_dataset, "Val", os.path.join(figures_dir, "figure_02.png"))
-    save_figure(test_dataset, "Test", os.path.join(figures_dir, "figure_03.png"))
+    save_figure(train_dataset, "Train", os.path.join(res_dir, figures_dir, "figure_01.png"))
+    save_figure(valid_dataset, "Val", os.path.join(res_dir, figures_dir, "figure_02.png"))
+    save_figure(test_dataset, "Test", os.path.join(res_dir, figures_dir, "figure_03.png"))
 
     logging.info("2.- Model instantiation")
     model = OilModel(arch, "resnet34", in_channels=3, out_classes=len(classes))
 
     logging.info("3.- Training")
-    logger = CSVLogger(f"{arch}_logs", name="my_exp_name")
-    trainer = pl.Trainer(gpus=1, max_epochs=10, logger=logger)
+    logger = CSVLogger(os.path.join(res_dir, logs_dir), name="my_exp_name")
+    trainer = pl.Trainer(gpus=1, max_epochs=2, logger=logger)
     trainer.fit(model, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
 
     # run validation dataset
     logging.info("4.- Validation metrics")
     valid_metrics = trainer.validate(model, dataloaders=valid_dataloader, verbose=False)
-    logging.info(valid_metrics)
+    logging.info(f"\tMetrics: {valid_metrics}")
 
     # run test dataset
     logging.info("5.- Test metrics")
     test_metrics = trainer.test(model, dataloaders=test_dataloader, verbose=False)
-    logging.info(test_metrics)
+    logging.info(f"\tMetrics: {test_metrics}")
 
     logging.info("6.- Result visualization")
     batch = next(iter(test_dataloader))
     test_model(model, batch, results_dir)
 
+
+def main(res_dir, data_dir):
+    for arch in ['unet', 'linknet', 'fpn', 'pspnet', 'pan']:
+        process(res_dir, data_dir, arch)
+
+
+#for arch in ['unet', 'unetplusplus', 'manet', 'linknet', 'fpn', 'pspnet', 'deeplabv3', 'deeplabv3plus', 'pan']:
+logging.info("Start!")
+main("results", "/home/est_posgrado_manuel.suarez/data/oil-spill-dataset_256")
 logging.info('Done!')
