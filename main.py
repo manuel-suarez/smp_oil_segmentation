@@ -75,7 +75,7 @@ def process(res_dir, data_dir, arch):
 
     logging.info("6.- Result visualization")
     batch = next(iter(test_dataloader))
-    test_model(model, batch, results_dir)
+    test_model(model, batch, os.path.join(res_dir, results_dir))
 
 
 def main(res_dir, data_dir):
