@@ -12,6 +12,7 @@ from pytorch_lightning.loggers import CSVLogger
 
 
 cositas
+pastelitos
 
 
 def create_datasets(data_dir, classes):
